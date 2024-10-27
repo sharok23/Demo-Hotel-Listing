@@ -1,0 +1,65 @@
+Step 1: Set Up the Project Locally
+
+Clone the Repository (if it's on a version control platform like GitHub).
+Open the Project in Visual Studio or another IDE that supports .NET.
+
+Step 2: Check Dependencies and Build the Project
+
+Restore NuGet Packages:
+
+In Visual Studio, right-click on the solution in Solution Explorer and select "Restore NuGet Packages."
+Make sure you have all required packages, including:
+
+AutoMapper.Extensions.Microsoft.DependencyInjection
+Microsoft.EntityFrameworkCore.SqlServer
+Serilog.AspNetCore
+Serilog.Sinks.Seq
+Swashbuckle.AspNetCore for Swagger documentation
+Build the Project to ensure there are no errors in the setup.
+
+Step 3: Configure Database Connection
+
+Check the Connection String:
+
+Open appsettings.json and locate "ConnectionStrings": { "HotelListingDbConnectionString" }.
+Update this connection string with the correct values if you need to connect to a specific SQL Server instance.
+Run Migrations to Set Up the Database:
+
+Open the Package Manager Console in Visual Studio.
+Run Update-Database to apply the migration (SeededCountriesAndHotels) and initialize the database with seeded data.
+
+Step 4: Review Entity Models and DTOs
+
+Entities: Look at Country and Hotel models in HotelListing.API.NET5.Data. These represent the database tables.
+DTOs:
+
+Review the DTO classes (CountryDto, CreateCountryDto, GetCountryDto, UpdateCountryDto, and HotelDto) in the Models folder. These are used to transfer data between the client and server.
+
+Step 5: Review Repositories and Services
+
+Generic Repository (GenericRepository<T>): Provides basic CRUD operations.
+Countries Repository (CountriesRepository): Extends the generic repository and includes a custom method, GetDetails(int id), for fetching country details with associated hotels.
+
+Step 6: Set Up Dependency Injection in Startup.cs
+
+In Startup.cs, make sure all required services are registered, especially:
+
+Database Context: HotelListingDbContext with SQL Server
+Repositories: CountriesRepository and GenericRepository
+Serilog for logging
+Swagger for API documentation
+
+Step 7: Run the Project and Test with Swagger
+
+Run the Application: Press F5 in Visual Studio or dotnet run from the command line.
+Open Swagger: Visit https://localhost:5001/swagger (or the designated Swagger URL) to see the API documentation and interact with endpoints.
+
+Step 8: Test the API Endpoints
+
+Countries Endpoint: Test the CRUD operations for Country by adding, updating, retrieving, and deleting country records.
+Hotels Endpoint: Check the related hotel data to confirm that countries and hotels are associated correctly in the database.
+
+Step 9: Set Up Logging with Serilog (Optional for Debugging)
+
+Review Program.cs and appsettings.json for Serilog setup, which outputs logs to files and Seq if configured.
+Logs can help in debugging errors or tracking information on requests.
