@@ -5,6 +5,7 @@ using AutoMapper;
 using Demo_Hotel_Listing.contract.response;
 using Demo_Hotel_Listing.Repository;
 using Demo_Hotel_Listing.contract.request;
+using Demo_Hotel_Listing.exception;
 
 namespace Demo_Hotel_Listing.Controllers
 {
@@ -23,10 +24,10 @@ namespace Demo_Hotel_Listing.Controllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CountryResponse>>> GetCountries()
+        public async Task<ActionResult<IEnumerable<GetAllCountries>>> GetCountries()
         {
             var countries = await _countriesRepository.GetAllAsync();
-            var records = _mapper.Map<List<CountryResponse>>(countries);
+            var records = _mapper.Map<List<GetAllCountries>>(countries);
             return Ok(records);
         }
 
@@ -36,14 +37,14 @@ namespace Demo_Hotel_Listing.Controllers
         {
             var country = await _countriesRepository.GetDetails(id);
 
-            if (country == null)
+            if (!await CountryExists(id))
             {
-                return NotFound();
+                throw new NotFoundException("Country", id);
             }
 
             var countryDto = _mapper.Map<CountryResponse>(country);
 
-            return countryDto;
+            return Ok(countryDto);
         }
 
         // PUT: api/Countries/5
@@ -51,28 +52,16 @@ namespace Demo_Hotel_Listing.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCountry(int id, CountryRequest countryRequest)
         {
-
             var country = await _countriesRepository.GetAsync(id);
-
-            _mapper.Map(countryRequest, country);
-
-            try
+            if (!await CountryExists(id))
             {
+                throw new NotFoundException("Country", id);
+            }
+
+                _mapper.Map(countryRequest, country);
                 await _countriesRepository.UpdateAsync(country);
                 var response = _mapper.Map<CountryResponse>(country);
                 return Ok(response);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await CountryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
         }
 
         // POST: api/Countries
@@ -92,9 +81,9 @@ namespace Demo_Hotel_Listing.Controllers
         public async Task<IActionResult> DeleteCountry(int id)
         {
             var country = await _countriesRepository.GetAsync(id);
-            if (country == null)
+            if (!await CountryExists(id))
             {
-                return NotFound();
+                throw new NotFoundException("Country", id);
             }
 
             await _countriesRepository.DeleteAsync(id);

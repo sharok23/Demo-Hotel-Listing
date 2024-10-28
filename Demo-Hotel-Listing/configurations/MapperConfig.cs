@@ -11,6 +11,11 @@ namespace Demo_Hotel_Listing.configurations
        public MapperConfig() {
             CreateMap<CountryRequest, Country>();
             CreateMap<Country, CountryResponse>();
+            CreateMap<HotelRequest, Hotel>();
+            CreateMap<Hotel, HotelResponse>();
+            CreateMap<Country, GetAllCountries>()
+                .ForMember(dest => dest.Hotels, opt => opt
+                    .MapFrom(src => src.Hotels));
         }    
     }
 }

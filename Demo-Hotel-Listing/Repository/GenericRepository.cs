@@ -32,7 +32,7 @@ namespace Demo_Hotel_Listing.Repository
             return entity != null;
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }

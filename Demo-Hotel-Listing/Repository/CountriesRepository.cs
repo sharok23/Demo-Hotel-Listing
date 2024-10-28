@@ -15,8 +15,19 @@ namespace Demo_Hotel_Listing.Repository
 
         public async Task<Country> GetDetails(int id)
         {
+            //return await _context.Countries
+            //    .FirstOrDefaultAsync(q => q.Id == id);
             return await _context.Countries
+                .Include(q => q.Hotels)
                 .FirstOrDefaultAsync(q => q.Id == id);
         }
+
+        public override async Task<List<Country>> GetAllAsync()
+        {
+            return await _context.Countries
+                .Include(q => q.Hotels)
+                .ToListAsync();
+        }
+
     }
 }

@@ -2,6 +2,7 @@ using Demo_Hotel_Listing.configurations;
 using Demo_Hotel_Listing.Data;
 using Demo_Hotel_Listing.Repository;
 using Microsoft.EntityFrameworkCore;
+using Demo_Hotel_Listing.exception;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<HotelListingDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DemoHotelConnectionString")));
 builder.Services.AddAutoMapper(typeof(MapperConfig));
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));  // This registers the generic repository
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<IHotelsRepository, HotelsRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -25,7 +27,7 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
-
+//app.ConfigureExceptionHandler();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

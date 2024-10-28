@@ -9,10 +9,9 @@ namespace Demo_Hotel_Listing.Data
         {
 
         }
-
-
-        //public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Demo_Hotel_Listing.Models.Hotel> Hotel { get; set; } = default!;
     }
 }
 
